@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>eGO CRM - Optimizador de Imágenes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eGO CRM - Optimizador Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root {
@@ -18,54 +19,89 @@
             background-image: radial-gradient(#d1d9e6 1px, transparent 1px);
             background-size: 20px 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             color: #334155;
+            padding: 20px;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
             width: 100%;
-            max-width: 500px;
+            max-width: 800px;
             text-align: center;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+            position: relative;
         }
 
         .header-logo {
             background-color: var(--primary);
-            padding: 30px;
+            padding: 55px 40px;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
         .logo-img {
-            max-width: 180px;
+            max-width: 220px;
             height: auto;
             display: block;
         }
 
-        .content {
-            padding: 40px;
+        /* BOTONES SUPERIORES */
+        .btn-top {
+            position: absolute;
+            top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            border-radius: 6px;
         }
 
-        p { 
-            color: #64748b; 
-            font-size: 15px; 
-            margin: 0 0 32px 0; 
-            line-height: 1.5;
+        .btn-access {
+            left: 25px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 8px 16px;
+            font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.3);
         }
+
+        .btn-access:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-forgot {
+            right: 25px;
+            color: rgba(255,255,255,0.7);
+            font-size: 11px;
+            padding: 8px;
+        }
+
+        .btn-forgot:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .content { padding: 50px; }
+
+        h2 { color: var(--primary); font-size: 24px; margin-bottom: 10px; letter-spacing: -0.5px; }
+        p { color: #64748b; font-size: 17px; margin: 0 0 35px 0; line-height: 1.6; }
 
         .drop-zone {
-            border: 2px dashed #cbd5e1;
-            border-radius: 20px;
-            padding: 60px 20px;
+            border: 3px dashed #cbd5e1;
+            border-radius: 25px;
+            padding: 80px 30px;
             cursor: pointer;
             background: #ffffff;
             position: relative;
@@ -75,80 +111,97 @@
         .drop-zone:hover {
             border-color: var(--accent);
             background: #f8fafc;
-            transform: translateY(-2px);
+            transform: scale(1.01);
         }
 
-        .drop-zone p { 
-            margin: 0; 
-            font-weight: 600; 
-            color: var(--primary);
-            font-size: 16px;
-        }
+        .drop-zone p { margin: 0; font-weight: 700; color: var(--primary); font-size: 20px; }
+        .drop-zone span { font-size: 15px; color: #94a3b8; display: block; margin-top: 10px; }
+
+        input[type="file"] { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
 
         #status-box {
             display: none;
-            margin-top: 24px;
-            padding: 16px;
-            border-radius: 12px;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
             background: #f1f5f9;
-            color: var(--primary);
-            font-weight: 500;
+            font-size: 18px;
         }
 
-        #log {
-            margin-top: 24px;
-            text-align: left;
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 13px;
-        }
-
-        .log-item {
+        .toolbar {
             display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #f1f5f9;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 800px;
         }
 
-        .loader {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
-            margin-right: 12px;
-            vertical-align: middle;
+        .tool-btn {
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .tool-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+            border-color: var(--accent);
+        }
+
+        #log { margin-top: 30px; text-align: left; max-height: 150px; overflow-y: auto; font-size: 14px; border-top: 1px solid #eee; padding-top: 15px; }
+        
+        @media (max-width: 600px) {
+            .header-logo { padding: 70px 20px 40px 20px; }
+            .btn-access { left: 50%; transform: translateX(-110%); top: 15px; }
+            .btn-forgot { right: 50%; transform: translateX(110%); top: 15px; text-align: center; width: 120px;}
+            .content { padding: 30px 15px; }
+            .tool-btn { width: 100%; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-logo">
+        <a href="https://admin.egorealestate.com/egocore" target="_blank" class="btn-top btn-access">ACCESO CRM</a>
+        
         <img src="https://i.imgur.com/kVfITDo.png" alt="eGO CRM Logo" class="logo-img">
+        
+        <a href="https://admin.egorealestate.com/egocore/forgotpassword" target="_blank" class="btn-top btn-forgot">¿Has olvidado la contraseña? Solicítala</a>
     </div>
     
     <div class="content">
+        <h2>Optimizador de Imágenes</h2>
         <p>Prepara tus fotos con el formato correcto y la resolución optima para insertar en <strong>eGO CRM</strong></p>
         
         <div class="drop-zone">
-            <p>Arrastra tus fotos aquí</p>
-            <span style="font-size: 13px; color: #94a3b8;">Formatos aceptados: JPG, PNG, WEBP...</span>
+            <p>Suelte sus fotos aquí</p>
+            <span>O haga clic para buscarlas en su dispositivo</span>
             <input type="file" id="files" multiple accept="image/*">
         </div>
 
         <div id="status-box">
-            <div class="loader" id="spinner"></div> <span id="status-text">Iniciando...</span>
+            <span id="status-text">Procesando...</span>
         </div>
 
         <div id="log"></div>
     </div>
-    <canvas id="canvas" style="display:none;"></canvas>
 </div>
+
+<div class="toolbar">
+    <a href="https://wiki-es.egorealestate.com/login" target="_blank" class="tool-btn">🎓 Academia eGO</a>
+    <a href="https://www.egorealestate.es/webinars" target="_blank" class="tool-btn">📅 Formaciones / Webinars</a>
+    <a href="mailto:support@egorealestate.com" class="tool-btn">📩 Soporte</a>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
 
 <script>
     const fileInput = document.getElementById('files');
@@ -166,34 +219,27 @@
         statusBox.style.display = 'block';
         statusBox.style.background = '#f1f5f9';
         statusBox.style.color = 'var(--primary)';
-        document.getElementById('spinner').style.display = 'inline-block';
-        log.innerHTML = '';
+        log.innerHTML = '<strong>Archivos listos:</strong><br>';
         
         for (let i = 0; i < files.length; i++) {
-            statusText.innerText = `Optimizando ${i + 1} de ${files.length}...`;
+            statusText.innerText = `Procesando ${i + 1} de ${files.length}...`;
             const base64Data = await processFile(files[i]);
             const imageData = base64Data.split(',')[1];
             const cleanName = files[i].name.replace(/\.[^/.]+$/, "");
-            zip.file(`${cleanName}_optima.png`, imageData, {base64: true});
+            zip.file(`${cleanName}_ego.png`, imageData, {base64: true});
             
-            const item = document.createElement('div');
-            item.className = 'log-item';
-            item.innerHTML = `<span>${files[i].name}</span><span style="color:var(--success)">✓ Optimizada</span>`;
-            log.prepend(item);
+            log.innerHTML += `<div style="padding:4px 0; border-bottom:1px solid #f0f0f0;">✅ ${files[i].name}</div>`;
         }
 
-        statusText.innerText = "Creando archivo ZIP...";
-        
+        statusText.innerText = "Generando archivo ZIP...";
         zip.generateAsync({type:"blob"}).then(function(content) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(content);
             link.download = "fotos_ajustadas.zip";
             link.click();
-            
+            statusText.innerHTML = "¡Listo! ZIP descargado correctamente.";
             statusBox.style.background = "#ecfdf5";
             statusBox.style.color = "#065f46";
-            statusText.innerText = "¡Proceso terminado con éxito!";
-            document.getElementById('spinner').style.display = 'none';
         });
     });
 
